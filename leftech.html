@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+
+  <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+</head>
+<body>
+
+<form action="https://www.eliftech.com/school-task" method="get" name="leftech">
+
+<button onclick="callAjax()">Обчислить данные</button>
+  <p></p>
+</form>
+
+<script>
+
+    function callAjax() {
+      $.ajax({
+        url: 'https://www.eliftech.com/school-task',
+        method: 'GET',
+        success: function (data) {
+          console.log(data);
+          var arr = [];
+          dar = data['expressions'];
+          var ws = new MathSolver();
+          for (var i = 0; i < dar.length; i++) {
+            arr.push(Math.floor(ws.solvePostfix(dar[i])));
+          }
+          var finalData = {"expressions": dar, "id": data[id]};
+          $("p").html(finalData);
+        }
+      });
+    }
+    function MathSolver() {
+
+      this.solvePostfix = function(postfix) {
+        var resultStack = [];
+        postfix = postfix.split(" ");
+        for(var i = 0; i < postfix.length; i++) {
+          if(postfix[i].isNumeric()) {
+            resultStack.push(postfix[i]);
+          } else {
+            var a = resultStack.pop();
+            var b = resultStack.pop();
+            if(postfix[i] === "+") {
+              resultStack.push(parseInt(a) - parseInt(b));
+            } else if(postfix[i] === "-") {
+              resultStack.push(parseInt(a) + parseInt(b) + 8);
+            } else if(postfix[i] === "*") {
+              if(b != 0){
+              resultStack.push(Math.floor(parseInt(a) % parseInt(b)));
+              }
+              else {
+                resultStack.push(42);
+              }
+            } else if(postfix[i] === "/") {
+              if(b != 0){
+                resultStack.push(Math.floor(parseInt(a) / parseInt(b)));
+              }
+              else {
+                resultStack.push(42);
+              }
+            }
+          }
+        }
+        if(resultStack.length > 1) {
+          return "error";
+        } else {
+          return resultStack.pop();
+        }
+      }
+
+    }
+    String.prototype.isNumeric = function() {
+      return !isNaN(parseFloat(this)) && isFinite(this);
+    }
+
+    </script>
+</body>
+</html>
