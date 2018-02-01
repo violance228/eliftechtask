@@ -8,31 +8,27 @@
 </head>
 <body>
 
-<form action="https://www.eliftech.com/school-task" method="get" name="leftech">
-
-<button onclick="callAjax()">Обчислить данные</button>
-  <p></p>
 </form>
 
 <script>
 
-    function callAjax() {
       $.ajax({
         url: 'https://www.eliftech.com/school-task',
         method: 'GET',
         success: function (data) {
           console.log(data);
-          var arr = [];
-          dar = data['expressions'];
+          var dar = data['expressions'];
           var ws = new MathSolver();
           for (var i = 0; i < dar.length; i++) {
             arr.push(Math.floor(ws.solvePostfix(dar[i])));
           }
-          var finalData = {"expressions": dar, "id": data[id]};
-          $("p").html(finalData);
-        }
+        },
+        dataType: JSON
       });
-    }
+       $.post( "https://www.eliftech.com/school-task", { func: "getNameAndTime" }, function( data ) { 
+        console.log( data.name ); // John 
+        console.log( data.time ); // 2pm 
+        }, "json"); 
     function MathSolver() {
 
       this.solvePostfix = function(postfix) {
