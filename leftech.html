@@ -11,30 +11,32 @@
 </form>
 
 <script>
-       var test = [];
+       var test = {};
       $.ajax({
         url: 'https://www.eliftech.com/school-task',
         method: 'GET',
         success: function (data) {
           console.log(data);
           var arr = [];
-          var dar = data['expressions'];
+          var dar = data['expressions']; 
           var ws = new MathSolver();
+
           for (var i = 0; i < dar.length; i++) {
-            arr.push(Math.floor(ws.solvePostfix(dar[i])));
+            arr.push(Math.floor(ws.solvePostfix(dar[i]))); 
           }
-          test = {'expressions': arr, 'id': data['id']};
+          test = {'results': arr,'id': data['id']};
           console.log(test);
-          send();
+          send(test);
         }
       });
-      function send() {
+      function send(test) {
         $.ajax({
           type: 'POST',
           url: 'https://www.eliftech.com/school-task',
-          data: 'test',
+          data: test,
           success: function(data){
             console.log(data);
+            console.log(test);
           }
         });
       }
